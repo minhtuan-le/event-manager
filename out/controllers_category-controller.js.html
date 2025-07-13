@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/category-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/category-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * The Event model from Mongoose, used to interact with the events collection in the database.
+ * @const {mongoose.Model}
+ */
+const Event = require("../models/event");
+
+/**
+ * The Category model from Mongoose, used to interact with the categories collection in the database.
+ * @const {mongoose.Model}
+ */
+const Category = require("../models/category");
+
+/**
+ * The operationController module, providing functions to interact with the operations collection in the database.
+ * @const {object}
+ */
+const operationController = require("./operation-controller");
+
+module.exports = {
+    /**
+     * Adds a new category to the database.
+     *
+     * @async
+     * @function
+     * @param {object} body - The request body containing category data.
+     * @returns {Promise&lt;object|null>} A promise that resolves to the created event or null if an error occurs.
+     * @throws {Error} If an error occurs while creating the category.
+     */
+	addCategory: async function (body) {
+        try {
+            let aCategory = new Category({ 
+                name: body.name,
+                description: body.description,
+                image: body.image,
+                eventList: body.eventList,
+             });
+            await aCategory.save();
+            await operationController.incrementCount('insertCount');
+            return aCategory;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+	},
+
+    /**
+     * List all the categories existing in the database, and populated the eventList atrribute with event object 
+     * from events collection
+     *
+     * @async
+     * @function
+     * @returns {Promise&lt;object|null>} A promise that resolves to the list of all categories or null if an error occurs.
+     * @throws {Error} If an error occurs while querying the database.
+     */
+	getAll: async function () {
+        try {
+		    let categories = await Category.find().populate("eventList");
+            return categories;
+		} catch (err) {
+            console.log(err);
+            return null;
+        }
+	},
+
+    /**
+     * Deletes a category by its ID from the database.
+     * @async
+     * @function
+     * @param {string} eventId - The ID of the category to delete.
+     * @returns {Promise&lt;object>} A promise that resolves to the result of the delete operation.
+     * @throws {Error} If the category with the specified ID is not found.
+     */
+	deleteCategory: async function (categoryId) {
+        try {
+            let theCategory = await Category.findOne({ category_id: categoryId });
+
+            if (!theCategory) {
+                throw new Error(`No category with ID: ${categoryId} was found.`);
+            }
+
+            let result = await Event.deleteMany({ _id: { $in: theCategory.eventList } });
+            await Category.deleteOne({ category_id: categoryId });
+            
+            result.deletedCount +=1;
+            await operationController.incrementCount('deleteCount');
+
+            return result;
+        } catch (err) {
+            return { acknowledged: false, deletedCount: 0 };
+        }
+    },
+
+    /**
+     * Updates a category's name and description by its ID in the database.
+     *
+     * @async
+     * @function
+     * @param {object} body - The request body containing the category id, new name, and new description.
+     * @returns {Promise&lt;object|null>} A promise that resolves to the updated event or null if an error occurs.
+     * @throws {Error} If an error occurs while updating the category.
+     */
+    updateCategory: async (body) => {
+        try {
+            const { categoryId, name, description } = body;
+            const category = await Category.findOneAndUpdate(
+                { category_id: categoryId },
+                { name: name, description: description },
+                { new: true, runValidators: true }
+            );
+            
+            await operationController.incrementCount('updateCount');
+            return category;
+        } catch (err) {
+            return null;
+        }
+    },
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-router.html">router</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Category">Category</a></li><li><a href="global.html#Event">Event</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bodyParser">bodyParser</a></li><li><a href="global.html#calculateEndDate">calculateEndDate</a></li><li><a href="global.html#categoryController">categoryController</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#createCategorysAPI">createCategorysAPI</a></li><li><a href="global.html#createEventsAPI">createEventsAPI</a></li><li><a href="global.html#deleteCategoryAPI">deleteCategoryAPI</a></li><li><a href="global.html#deleteEventAPI">deleteEventAPI</a></li><li><a href="global.html#eventCont">eventCont</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#formatCurrentDate">formatCurrentDate</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatDuration">formatDuration</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generatedRandomID">generatedRandomID</a></li><li><a href="global.html#get/">get/</a></li><li><a href="global.html#get/category/31239552/add">get/category/31239552/add</a></li><li><a href="global.html#get/category/31239552/delete">get/category/31239552/delete</a></li><li><a href="global.html#get/category/31239552/list">get/category/31239552/list</a></li><li><a href="global.html#get/category/31239552/search">get/category/31239552/search</a></li><li><a href="global.html#get/event/31239552/:id">get/event/31239552/:id</a></li><li><a href="global.html#get/sihao/add-event">get/sihao/add-event</a></li><li><a href="global.html#get/sihao/category-detail">get/sihao/category-detail</a></li><li><a href="global.html#get/sihao/delete-event">get/sihao/delete-event</a></li><li><a href="global.html#get/sihao/event-delete">get/sihao/event-delete</a></li><li><a href="global.html#get/sihao/list-all-events">get/sihao/list-all-events</a></li><li><a href="global.html#get/sihao/list-sold-out-events">get/sihao/list-sold-out-events</a></li><li><a href="global.html#listCategoriesAPI">listCategoriesAPI</a></li><li><a href="global.html#listEventsAPI">listEventsAPI</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#morgan">morgan</a></li><li><a href="global.html#operationController">operationController</a></li><li><a href="global.html#post/category/31239552/add-post">post/category/31239552/add-post</a></li><li><a href="global.html#post/category/31239552/delete-post">post/category/31239552/delete-post</a></li><li><a href="global.html#post/category/31239552/search-result">post/category/31239552/search-result</a></li><li><a href="global.html#post/sihao/add-event">post/sihao/add-event</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateCategoryAPI">updateCategoryAPI</a></li><li><a href="global.html#updateEventAPI">updateEventAPI</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Sep 17 2023 18:52:27 GMT+1000 (澳大利亚东部标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

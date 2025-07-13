@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Format a date in US date format with a user-friendly string with 12-hour time format.
+ * @param {Date} dateToFormat - The date to format.
+ * @returns {string} - The formatted date string.
+ */
+const formatDate = function formatDate(dateToFormat) {
+    return dateToFormat.toLocaleString('en-US', {
+        hour12: true,
+    });
+}
+
+
+/**
+* Format the duration in minutes to a user-friendly string.
+* @param {number} durationInMinutes - The duration of the event in minutes.
+* @returns {string} - The formatted duration string.
+*/
+const formatDuration = function formatDuration(durationInMinutes) {
+    if (durationInMinutes &lt; 60) {
+        return `${durationInMinutes} minute(s)`;
+    } else {
+        let hours = Math.floor(durationInMinutes / 60);
+        let remainingMinutes = durationInMinutes % 60;
+
+        if (remainingMinutes == 0) {
+            return `${hours} hour(s)`;
+        } else {
+            return `${hours} hour(s) ${remainingMinutes} minute(s)`;
+        }
+    }
+}
+
+/**
+ * utils module containing all utility functions
+ * @module utils
+ */
+module.exports = {formatDate, formatDuration};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-router.html">router</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Category">Category</a></li><li><a href="global.html#Event">Event</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bodyParser">bodyParser</a></li><li><a href="global.html#calculateEndDate">calculateEndDate</a></li><li><a href="global.html#categoryController">categoryController</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#createCategorysAPI">createCategorysAPI</a></li><li><a href="global.html#createEventsAPI">createEventsAPI</a></li><li><a href="global.html#deleteCategoryAPI">deleteCategoryAPI</a></li><li><a href="global.html#deleteEventAPI">deleteEventAPI</a></li><li><a href="global.html#eventCont">eventCont</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#formatCurrentDate">formatCurrentDate</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatDuration">formatDuration</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generatedRandomID">generatedRandomID</a></li><li><a href="global.html#get/">get/</a></li><li><a href="global.html#get/category/31239552/add">get/category/31239552/add</a></li><li><a href="global.html#get/category/31239552/delete">get/category/31239552/delete</a></li><li><a href="global.html#get/category/31239552/list">get/category/31239552/list</a></li><li><a href="global.html#get/category/31239552/search">get/category/31239552/search</a></li><li><a href="global.html#get/event/31239552/:id">get/event/31239552/:id</a></li><li><a href="global.html#get/sihao/add-event">get/sihao/add-event</a></li><li><a href="global.html#get/sihao/category-detail">get/sihao/category-detail</a></li><li><a href="global.html#get/sihao/delete-event">get/sihao/delete-event</a></li><li><a href="global.html#get/sihao/event-delete">get/sihao/event-delete</a></li><li><a href="global.html#get/sihao/list-all-events">get/sihao/list-all-events</a></li><li><a href="global.html#get/sihao/list-sold-out-events">get/sihao/list-sold-out-events</a></li><li><a href="global.html#listCategoriesAPI">listCategoriesAPI</a></li><li><a href="global.html#listEventsAPI">listEventsAPI</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#morgan">morgan</a></li><li><a href="global.html#operationController">operationController</a></li><li><a href="global.html#post/category/31239552/add-post">post/category/31239552/add-post</a></li><li><a href="global.html#post/category/31239552/delete-post">post/category/31239552/delete-post</a></li><li><a href="global.html#post/category/31239552/search-result">post/category/31239552/search-result</a></li><li><a href="global.html#post/sihao/add-event">post/sihao/add-event</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateCategoryAPI">updateCategoryAPI</a></li><li><a href="global.html#updateEventAPI">updateEventAPI</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Sep 17 2023 18:52:27 GMT+1000 (澳大利亚东部标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

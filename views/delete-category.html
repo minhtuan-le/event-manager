@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List All Events</title>
+    <link href="/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container" style="display: flex; justify-content: center; align-items: center;">
+            <a class="navbar-brand" href="#">
+                <img src="/logo-no-background.png" alt="Event Management App Logo" width="150px" height="100px">
+            </a>
+        </div>
+    </nav>
+    <main class="container">
+        <section style="padding: 20px; background-color: lightgray; margin-bottom: 30px;">
+            <h1 class="text-center my-5">Event Management App</h1>
+            <div style="display:flex; justify-content:center; align-items:center;">
+                <a href="/" class="btn btn-primary">Back to Homepage</a>
+            </div>
+
+        </section>
+
+        <h2 class="text-center my-5">Delete Category By ID</h2>
+        <hr>
+
+        <div class="card-body">
+            <form method="post" action="/category/31239552/delete-post">
+
+                <div class="form-group row"
+                    style="margin-bottom: 20px; text-align: center; display:flex; align-items:center; justify-content:center;">
+                    <label for="id" class="col-sm-1 col-form-label">Category ID</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="id" id ='id' placeholder="Enter a category ID"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                    <div>
+                        <button type="submit" class="btn btn-danger">Delete Category</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+</body>
+
+<footer class="text-center py-3 mt-5" style="padding: 20px; background-color: lightgray;">
+    <p>&copy; 2023 Avalanche. All rights reserved.</p>
+</footer>

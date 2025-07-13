@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List All Events</title>
+  <link href="/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="/logo-no-background.png" alt="Event Management App Logo" width="150px" height="100px">
+      </a>
+    </div>
+  </nav>
+
+  <main class="container">
+    
+    <% if(findEvent===null){%>
+      <section style="padding: 20px; background-color: lightgray; margin-bottom: 30px;">
+        <h1 class="text-center my-5">Event Management App</h1>
+        <div style="display:flex; justify-content:center; align-items:center;">
+            <a href="/" class="btn btn-primary">Back to Homepage</a>
+        </div>
+
+    </section>
+      <div>
+        <h2 class="text-center my-5">No valid event found</h2>
+        <h3 class="text-center my-5">Insert new event ID in the URL or go back to Homepage</h3>
+      </div>
+      <% } else{ %>
+        <header>
+          <div class="bg-image" style="
+            background-image: url('/<%= findEvent.image %>');
+            height: 400px;
+          "></div>
+          <br>
+          <div style="display:flex; justify-content:center; align-items:center;">
+            <a href="/" class="btn btn-primary">Back to Homepage</a>
+          </div>
+    
+        </header>
+    
+        <h2 class="text-center my-5">Event Detail Page</h2>
+        <hr>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" style="text-align: center;">
+              <%= findEvent.name %>
+            </h5>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event ID:</label>
+              </div>
+              <text>
+                <%= findEvent.id %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Name:</label>
+              </div>
+              <text>
+                <%= findEvent.name %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Description:</label>
+              </div>
+              <text>
+                <%= findEvent.description %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Start Date Time:</label>
+              </div>
+              <text>
+                <%= formatDate(findEvent.startDateTime) %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Duration:</label>
+              </div>
+              <text>
+                <%= formatDuration(findEvent.durationInMinutes) %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event is Active:</label>
+              </div>
+              <text>
+                <%= findEvent.isActive? 'Yes' : 'No' %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Image resource path:</label>
+              </div>
+              <text>
+                <%= findEvent.image %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Capacity:</label>
+              </div>
+              <text>
+                <%= findEvent.capacity %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event Tickets Available:</label>
+              </div>
+              <text>
+                <%= findEvent.ticketsAvailable %>
+              </text>
+
+              <div class="text-left" style="font-weight: bold;">
+                <label class="col-form-label">Event category ID:</label>
+              </div>
+              <text>
+                <!-- Check if event.categories is an array or a single object -->
+                <% if (Array.isArray(findEvent.categories)) { %>
+                  <!-- Loop through the categories array within the event document -->
+                  <% findEvent.categories.forEach((category, index) => { %>
+                    <%= category.category_id %>
+                    <%= index < findEvent.categories.length - 1 ? ', ' : '' %>
+                  <% }); %>
+                <% } else { %>
+                  <%= findEvent.categories.category_id %>
+                <% } %>
+              </text>
+            </div>
+          </div>
+        </div>
+      <% }; %>
+  </main>
+</body>
+
+<footer class="text-center py-3 mt-5" style="padding: 20px; background-color: lightgray;">
+  <p>&copy; 2023 Avalanche. All rights reserved.</p>
+</footer>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List All Events</title>
+  <link href="/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light">
+		<div class="container" style="display: flex; justify-content: center; align-items: center;">
+			<a class="navbar-brand" href="#">
+				<img src="../../logo-no-background.png" alt="Event Management App Logo" width="150px" height="100px">
+			</a>
+		</div>
+	</nav>
+
+  <main class="container">
+    <section style="padding: 20px; background-color: lightgray; margin-bottom: 30px;">
+      <h1 class="text-center my-5">Event Management App</h1>
+      <div style="display:flex; justify-content:center; align-items:center;">
+        <a href="/" class="btn btn-primary">Back to Homepage</a>
+      </div>
+
+    </section>
+
+    <h2 class="text-center my-5">List Of Categories</h2>
+    <h3 class="text-center my-5">Filtered by Keyword: '<%= keyword %>'</h3>
+    <hr>
+    <div class="container mt-5">
+
+      <table class="table table-striped mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Images</th>
+            <th></th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through the eventDB array to display events -->
+          <% filteredList.forEach((category)=> { %>
+            <tr>
+              <td>
+                <%= category.id %>
+              </td>
+              <td>
+                <%= category.name %>
+              </td>
+              <td>
+                <%= category.description %>
+              </td>
+              <td>
+                <%= category.image %>
+              </td>
+              <td>
+                <img src="../../<%= category.image %>" alt="" width="250px" height="150px">
+              </td>
+              <td>
+                <%= category.createdAt %>
+              </td>
+              <td>
+                <a href="/sihao/category-detail/<%= category.id %>" class="btn btn-primary">View</a>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+      <div>
+        <a href="/category/31239552/add" class="btn btn-primary">Add Category</a>
+      </div>
+    </div>
+  </main>
+</body>
+
+<footer class="text-center py-3 mt-5" style="padding: 20px; background-color: lightgray;">
+  <p>&copy; 2023 Avalanche. All rights reserved.</p>
+</footer>

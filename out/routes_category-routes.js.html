@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: routes/category-routes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: routes/category-routes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * required express module
+ * @requires express
+ * @const
+ */
+const express = require("express");
+
+/**
+ * @type {import('express').Router}
+ * @const
+ * @description Creates a new router object, a complete middleware and routing system.
+ */
+const router = express.Router();
+
+/**
+ * @type {object}
+ * @const
+ * @description Imports the category controller which contains methods for handling categories routes.
+ */
+const categoryController = require("../controllers/category-controller");
+
+/**
+ * @type {import('mongoose').Model}
+ * @const
+ * @description Imports the Event model, representing a MongoDB collection of events.
+ */
+const Event = require("../models/event");
+
+/**
+ * @type {import('mongoose').Model}
+ * @const
+ * @description Imports the Category model, representing a MongoDB collection of categories.
+ */
+const Category = require("../models/category");
+
+/**
+ * @type {function}
+ * @const
+ * @description Imports utility functions for formatting dates and durations.
+ */
+const { formatDate, formatDuration} = require("../utils");
+
+/**
+ * Add an event category. Render the add category form.
+ * @name get/category/31239552/add
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/category/31239552/add', function (req, res) {
+  res.render('add-category');
+});
+
+/**
+ * Add an event category. Add new category info from the form to database.
+ * @name post/category/31239552/add-post
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.post('/category/31239552/add-post', async function (req, res) {
+  await categoryController.addCategory(req.body);
+  res.redirect('/category/31239552/list');
+});
+
+/**
+   * List all event categories. Render the table of all categories.
+   * @name get/category/31239552/list
+   * @function 
+   * @param {string} path - Express path
+   * @param {function} callback - Express callback
+   */
+router.get('/category/31239552/list', async function (req, res) {
+  let eventCategories = await Category.find();
+  res.render("list-categories", {eventCategories});
+});
+
+/**
+ * Filter all event categories with a keyword. 
+ * Render a form to input the keyword.
+ * @name get/category/31239552/search
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/category/31239552/search', function (req, res) {
+  res.render("search-categories");
+});
+
+/**
+ * filter all event categories with a keyword.
+ * Return the table of all categories with keyword match in description.
+ * @name post/category/31239552/search-result
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.post('/category/31239552/search-result', async function (req, res) {
+  let keyword = req.body.keyword;
+  let filteredList = await Category.find({description: {$regex : keyword} });
+  res.render("search-categories-result", {keyword, filteredList});
+});
+
+/**
+ * show details of an event selected by its ID.
+ * Render the info page about the event with the ID included in URL params.
+ * @name get/event/31239552/:id
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/event/31239552/:id', async function (req, res) {
+  const EVENT_ID = req.params.id;
+  let findEvent= await Event.findOne({id: EVENT_ID }).populate("categories");;
+
+  res.render("event-detail", {findEvent, formatDate, formatDuration});
+});
+
+/**
+ * Delete a category chosen by ID. Render the form to input the 
+ * ID of the category to be deleted.
+ * @name get/category/31239552/delete
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/category/31239552/delete', function (req, res) {
+  res.render('delete-category');
+});
+
+/**
+ * Delete a category chosen by ID. Delete the category with the posted ID
+ * and redirect the endpoint to list all the categories.
+ * @name post/category/31239552/delete-post
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.post('/category/31239552/delete-post', async function (req, res) {
+  await categoryController.deleteCategory(req.body.id)
+  res.redirect('/category/31239552/list');
+});
+
+/**
+ * export the router handler as a module
+ * @module router
+ */
+module.exports = router;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-router.html">router</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Category">Category</a></li><li><a href="global.html#Event">Event</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bodyParser">bodyParser</a></li><li><a href="global.html#calculateEndDate">calculateEndDate</a></li><li><a href="global.html#categoryController">categoryController</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#createCategorysAPI">createCategorysAPI</a></li><li><a href="global.html#createEventsAPI">createEventsAPI</a></li><li><a href="global.html#deleteCategoryAPI">deleteCategoryAPI</a></li><li><a href="global.html#deleteEventAPI">deleteEventAPI</a></li><li><a href="global.html#eventCont">eventCont</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#formatCurrentDate">formatCurrentDate</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatDuration">formatDuration</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generatedRandomID">generatedRandomID</a></li><li><a href="global.html#get/">get/</a></li><li><a href="global.html#get/category/31239552/add">get/category/31239552/add</a></li><li><a href="global.html#get/category/31239552/delete">get/category/31239552/delete</a></li><li><a href="global.html#get/category/31239552/list">get/category/31239552/list</a></li><li><a href="global.html#get/category/31239552/search">get/category/31239552/search</a></li><li><a href="global.html#get/event/31239552/:id">get/event/31239552/:id</a></li><li><a href="global.html#get/sihao/add-event">get/sihao/add-event</a></li><li><a href="global.html#get/sihao/category-detail">get/sihao/category-detail</a></li><li><a href="global.html#get/sihao/delete-event">get/sihao/delete-event</a></li><li><a href="global.html#get/sihao/event-delete">get/sihao/event-delete</a></li><li><a href="global.html#get/sihao/list-all-events">get/sihao/list-all-events</a></li><li><a href="global.html#get/sihao/list-sold-out-events">get/sihao/list-sold-out-events</a></li><li><a href="global.html#listCategoriesAPI">listCategoriesAPI</a></li><li><a href="global.html#listEventsAPI">listEventsAPI</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#morgan">morgan</a></li><li><a href="global.html#operationController">operationController</a></li><li><a href="global.html#post/category/31239552/add-post">post/category/31239552/add-post</a></li><li><a href="global.html#post/category/31239552/delete-post">post/category/31239552/delete-post</a></li><li><a href="global.html#post/category/31239552/search-result">post/category/31239552/search-result</a></li><li><a href="global.html#post/sihao/add-event">post/sihao/add-event</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateCategoryAPI">updateCategoryAPI</a></li><li><a href="global.html#updateEventAPI">updateEventAPI</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Sep 17 2023 18:52:27 GMT+1000 (澳大利亚东部标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

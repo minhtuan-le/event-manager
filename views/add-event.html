@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Event</title>
+  <link href="/bootstrap.min.css" rel="stylesheet" /></head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light" >
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="/logo-no-background.png" alt="Event Management App Logo" width="150px" height="100px">
+      </a>
+    </div>
+  </nav>
+  <main class="container">
+    <section style="padding: 20px; background-color: lightgray; margin-bottom: 30px;">
+      <h1 class="text-center my-5">Event Management App</h1>
+      <div style="display:flex; justify-content:center; align-items:center;">      
+        <a href="/" class="btn btn-primary" >Back to Homepage</a>
+      </div>
+    </section>
+
+    <h2 class="text-center my-5">Add a Event</h2>
+<hr>
+
+<div class="container">
+    <div class="card mt-4">
+      <div class="card-header">
+        <h4 class="my-0" style="text-align: center;">Fill in event details & click submit</h4>
+      </div>
+      <div class="card-body">
+        <form method="post" action="/sihao/add-event">
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="name" placeholder="Please enter a event name" required pattern="[a-zA-Z0-9\s]+" required>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" name="description" rows="4" placeholder="Enter a event description (optional)"></textarea>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="image" class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="image" placeholder="Enter a static image path (optional)">
+                  <small class="form-text text-muted">If not provided, the default image will be used.</small>
+                </div>
+              </div>
+
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="startDateTime" class="col-sm-2 col-form-label">Start Date Time</label>
+                <div class="col-sm-10">
+                  <input type="datetime-local" class="form-control" name="startDateTime" required>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="duration" class="col-sm-2 col-form-label">Duration in Minutes</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" name="durationInMinutes" placeholder="Please enter the event duration in minutes" required>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="isActive" class="col-sm-2 col-form-label">Is Active</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="isActive" value="true" checked>
+                    </div>
+                </div>
+              </div>
+        
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="capacity" class="col-sm-2 col-form-label">Capacity</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" name="capacity" placeholder="Enter event capacity (optional)">
+                  <small class="form-text text-muted">Default: 1000</small>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="ticketsAvailable" class="col-sm-2 col-form-label">Tickets Available</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" name="ticketsAvailable" placeholder="enter tickets available (optional)">
+                  <small class="form-text text-muted">Default: 1000</small>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <label for="categoryId" class="col-sm-2 col-form-label">Category Ids (separate by comma ",")</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="categories" placeholder="Please enter a category ID" required>
+                </div>
+              </div>
+        
+              <div class="form-group row" style="margin-bottom: 20px; text-align: center;">
+                <div>
+                  <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+              </div>
+    
+        </form>
+      </div>
+    </div>
+  </div>
+
+        
+    </main>
+
+    </body>
+
+    <footer class="text-center py-3 mt-5" style="padding: 20px; background-color: lightgray;">
+        <p>&copy; 2023 Avalanche. All rights reserved.</p>
+      </footer>
+    

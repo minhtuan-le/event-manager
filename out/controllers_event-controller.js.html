@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/event-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/event-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * The Event model from Mongoose, used to interact with the events collection in the database.
+ * @const {mongoose.Model}
+ */
+const Event = require("../models/event");
+
+/**
+ * The Category model from Mongoose, used to interact with the categories collection in the database.
+ * @const {mongoose.Model}
+ */
+const Category = require("../models/category");
+
+/**
+ * The operationController module, providing functions to interact with the operations collection in the database.
+ * @const {object}
+ */
+const operationController = require("./operation-controller");
+
+
+module.exports = {
+
+    /**
+     * Adds a new event to the database.
+     *
+     * @async
+     * @function
+     * @param {object} body - The request body containing event data.
+     * @returns {Promise&lt;object|null>} A promise that resolves to the created event or null if an error occurs.
+     * @throws {Error} If an error occurs while creating the event.
+     */
+    addEvent: async function (body) {
+        try {
+            let categoryIDs = body.categories ? body.categories.split(",") : [];
+
+            let CategoryOIDs = [];
+
+            for (let id of categoryIDs) {
+                let category = await Category.findOne({ category_id: id });
+                if (category) {
+                    CategoryOIDs.push(category._id);
+                }
+            }
+
+            let newEvent = {
+                name: body.name,
+                startDateTime: body.startDateTime,
+                isActive: body.isActive ? true : false,
+                ticketsAvailable: body.ticketsAvailable !== "" &amp;&amp; body.ticketsAvailable !== undefined
+                    ? parseInt(body.ticketsAvailable)
+                    : undefined,
+                description: body.description !== "" ? body.description : undefined,
+                capacity: body.capacity !== "" &amp;&amp; body.capacity !== undefined
+                    ? parseInt(body.capacity)
+                    : undefined,
+                durationInMinutes: parseInt(body.durationInMinutes),
+                image: body.image || undefined,
+                categories: CategoryOIDs,
+            }
+
+            let event = await new Event(newEvent).save();
+
+            await Category.updateMany(
+                { _id: { $in: newEvent.categories } },
+                { $push: { eventList: event._id } }
+            );
+
+            await operationController.incrementCount('insertCount');
+            return event;
+
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    },
+
+    /**
+     * Deletes an event by its ID from the database.
+     * @async
+     * @function
+     * @param {string} eventId - The ID of the event to delete.
+     * @returns {Promise&lt;object>} A promise that resolves to the result of the delete operation.
+     * @throws {Error} If the event with the specified ID is not found.
+     */
+    deleteEvent: async function (eventId) {
+        try {
+            let event = await Event.findOne({ id: eventId });
+
+            if (!event) {
+                throw new Error(`Event with ID ${eventId} not found.`);
+            }
+
+            let result = await Event.deleteMany({ id: eventId });
+            await operationController.incrementCount('deleteCount');
+            const categoryIds = event.categories;
+            await Category.updateMany(
+                { _id: { $in: categoryIds } },
+                { $pull: { eventList: event._id } }
+            );
+
+            return result;
+        } catch (err) {
+            return { acknowledged: false, deletedCount: 0 };
+        }
+    },
+
+    /**
+     * Updates an event's name and capacity by its ID in the database.
+     *
+     * @async
+     * @function
+     * @param {object} body - The request body containing the event ID, new name, and new capacity.
+     * @returns {Promise&lt;object|null>} A promise that resolves to the updated event or null if an error occurs.
+     * @throws {Error} If an error occurs while updating the event.
+     */
+    updateEvent: async (body) => {
+        try {
+            // get the attributes and update the event
+            const { eventId, name, capacity } = body;
+            const event = await Event.findOneAndUpdate(
+                { id: eventId },
+                { name: name, capacity: parseInt(capacity) },
+                { new: true, runValidators: true }
+            );
+
+            await operationController.incrementCount('updateCount');
+            return event;
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
+    },
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-router.html">router</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Category">Category</a></li><li><a href="global.html#Event">Event</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bodyParser">bodyParser</a></li><li><a href="global.html#calculateEndDate">calculateEndDate</a></li><li><a href="global.html#categoryController">categoryController</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#createCategorysAPI">createCategorysAPI</a></li><li><a href="global.html#createEventsAPI">createEventsAPI</a></li><li><a href="global.html#deleteCategoryAPI">deleteCategoryAPI</a></li><li><a href="global.html#deleteEventAPI">deleteEventAPI</a></li><li><a href="global.html#eventCont">eventCont</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#formatCurrentDate">formatCurrentDate</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatDuration">formatDuration</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generatedRandomID">generatedRandomID</a></li><li><a href="global.html#get/">get/</a></li><li><a href="global.html#get/category/31239552/add">get/category/31239552/add</a></li><li><a href="global.html#get/category/31239552/delete">get/category/31239552/delete</a></li><li><a href="global.html#get/category/31239552/list">get/category/31239552/list</a></li><li><a href="global.html#get/category/31239552/search">get/category/31239552/search</a></li><li><a href="global.html#get/event/31239552/:id">get/event/31239552/:id</a></li><li><a href="global.html#get/sihao/add-event">get/sihao/add-event</a></li><li><a href="global.html#get/sihao/category-detail">get/sihao/category-detail</a></li><li><a href="global.html#get/sihao/delete-event">get/sihao/delete-event</a></li><li><a href="global.html#get/sihao/event-delete">get/sihao/event-delete</a></li><li><a href="global.html#get/sihao/list-all-events">get/sihao/list-all-events</a></li><li><a href="global.html#get/sihao/list-sold-out-events">get/sihao/list-sold-out-events</a></li><li><a href="global.html#listCategoriesAPI">listCategoriesAPI</a></li><li><a href="global.html#listEventsAPI">listEventsAPI</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#morgan">morgan</a></li><li><a href="global.html#operationController">operationController</a></li><li><a href="global.html#post/category/31239552/add-post">post/category/31239552/add-post</a></li><li><a href="global.html#post/category/31239552/delete-post">post/category/31239552/delete-post</a></li><li><a href="global.html#post/category/31239552/search-result">post/category/31239552/search-result</a></li><li><a href="global.html#post/sihao/add-event">post/sihao/add-event</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateCategoryAPI">updateCategoryAPI</a></li><li><a href="global.html#updateEventAPI">updateEventAPI</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Sep 17 2023 18:52:27 GMT+1000 (澳大利亚东部标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

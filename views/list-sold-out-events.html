@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Sold Out Events</title>
+  <link href="/bootstrap.min.css" rel="stylesheet" /></head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light" >
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="/logo-no-background.png" alt="Event Management App Logo" width="150px" height="100px">
+      </a>
+    </div>
+  </nav>
+      <main class="container">
+        <section style="padding: 20px; background-color: lightgray; margin-bottom: 30px;">
+          <h1 class="text-center my-5">Event Management App</h1>
+          <div style="display:flex; justify-content:center; align-items:center;">      
+            <a href="/" class="btn btn-primary" >Back to Homepage</a>
+          </div>
+        </section>
+    
+        <h2 class="text-center my-5">List Sold Out Events</h2>
+    <hr>
+    <div class="container mt-5">
+
+      <table class="table table-striped mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Duration</th>
+            <th>Is Active</th>
+            <th>Capacity</th>
+            <th>Tickets Available</th>
+            <th>Category ID</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through the eventDB array to display events -->
+          <% eventDB.forEach((event) => { 
+              if(event.ticketsAvailable == 0){%>
+            <tr>
+              <td><%= event.id %></td>
+              <td><%= event.name %></td>
+              <td><%= event.description %></td>
+              <td><%= formatDate(event.startDateTime) %></td>
+              <td><%= formatDate(event.endDateTime) %></td>
+              <td><%= formatDuration(event.durationInMinutes) %></td>
+              <td> <input type="checkbox" value="" <%= event.isActive ? "checked" : "" %> disabled></td>
+              <td><%= event.capacity %></td>
+              <td><%= event.ticketsAvailable %></td>
+              <td>
+                <!-- Loop through the categories array within the event document -->
+                <% event.categories.forEach((category, index)=> { %>
+                  <%= category.category_id %>
+                    <%= index < event.categories.length - 1 ? ', ' : '' %>
+                      <% }); %>
+              </td>
+              <td>
+                <a href="/event/31239552/<%= event.id %>" class="btn btn-primary">View</a>
+              </td>
+            </tr>
+          <% }}); %>
+        </tbody>
+      </table>
+    </div>
+    </main>
+  </body>
+
+  <footer class="text-center py-3 mt-5" style="padding: 20px; background-color: lightgray;">
+    <p>&copy; 2023 Avalanche. All rights reserved.</p>
+  </footer>
+  

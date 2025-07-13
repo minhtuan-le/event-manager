@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: routes/event-routes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: routes/event-routes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * required express module
+ * @requires express
+ * @const
+ */
+const express = require("express");
+
+/**
+ * @type {import('express').Router}
+ * @const
+ * @description Creates a new router object, a complete middleware and routing system.
+ */
+const router = express.Router();
+
+/**
+ * @type {object}
+ * @const
+ * @description Imports the event controller which contains methods for handling event-related routes.
+ */
+const eventCont = require("../controllers/event-controller");
+
+/**
+ * @type {import('mongoose').Model}
+ * @const
+ * @description Imports the Event model, representing a MongoDB collection of events.
+ */
+const Event = require("../models/event");
+
+/**
+ * @type {import('mongoose').Model}
+ * @const
+ * @description Imports the Category model, representing a MongoDB collection of categories.
+ */
+const Category = require("../models/category");
+
+/**
+ * @type {function}
+ * @const
+ * @description Imports utility functions for formatting dates and durations.
+ */
+const { formatDate, formatDuration} = require("../utils");
+
+
+
+/**
+ * Add an event. Render the add event form.
+ * @name get/sihao/add-event
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/add-event', function (req, res) {
+    res.render('add-event');
+});
+
+/**
+ * Handle adding a new event.
+ * @name post/sihao/add-event
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.post('/add-event', async function (req, res) {
+    await eventCont.addEvent(req.body);
+    res.redirect('list-all-events');
+
+});
+
+/**
+ * List all events. Render the list of all events.
+ * @name get/sihao/list-all-events
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/list-all-events', async function (req, res) {
+    const eventDB = await Event.find().populate("categories");
+    res.render('list-all-events', {eventDB, formatDate, formatDuration});
+});
+
+/**
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+ *  List all sold out events. Render the list of all sold out events.
+=======
+ * List all sold out events. Render the list of all sold out events.
+>>>>>>> 1b27cb32de6a88ae40f41748d264dc9f93f0f61f
+ * @name get/sihao/list-sold-out-events
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/list-sold-out-events', async function (req, res) {
+    const eventDB = await Event.find({ ticketsAvailable: { $eq: 0 }}).populate("categories");
+
+    res.render('list-sold-out-events', { eventDB, formatDate, formatDuration});
+});
+
+/**
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+ *  Display category detail. Display category detail including events.
+=======
+ * Display category detail. Display category detail including events.
+>>>>>>> 1b27cb32de6a88ae40f41748d264dc9f93f0f61f
+ * @name get/sihao/category-detail
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/category-detail/:id', async function (req, res) {
+    const CATEGORY_ID = req.params.id;
+
+    const category = await Category.findOne({category_id: CATEGORY_ID})
+
+    if(!category){
+        res.render('category-detail', {category})
+        return
+    }
+    
+    const eventDB = await Event.find({ categories: category._id }).populate(
+        "categories"
+      );
+
+      const modifiedEvents = eventDB.map((event) => {
+        const modifiedCategoryList = event.categories.map(
+          (category) => category.id
+        );
+        return { ...event._doc, categoryList: modifiedCategoryList };
+      });
+    res.render('category-detail', { eventDB: modifiedEvents, category, formatDate, formatDuration});
+});
+
+/**
+ * Delete event by ID. Render the event deletion page.
+ * @name get/sihao/delete-event
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/delete-event', function (req, res) {
+    res.render('event-delete');
+});
+
+/**
+ * Handle deleting an event by its ID.
+ * @name get/sihao/event-delete
+ * @function 
+ * @param {string} path - Express path
+ * @param {function} callback - Express callback
+ */
+router.get('/event-delete', async function (req, res) {
+    const event = await eventCont.deleteEvent(req.query.eventId);
+
+    if (event) {
+        res.redirect('/sihao/list-all-events');
+    } else {
+        res.send(`There is no event with the id: ${req.query.eventId}`);
+    }
+});
+
+
+/**
+ * export the router handler as a module
+ * @module router
+ */
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-router.html">router</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Category">Category</a></li><li><a href="global.html#Event">Event</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#bodyParser">bodyParser</a></li><li><a href="global.html#calculateEndDate">calculateEndDate</a></li><li><a href="global.html#categoryController">categoryController</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#createCategorysAPI">createCategorysAPI</a></li><li><a href="global.html#createEventsAPI">createEventsAPI</a></li><li><a href="global.html#deleteCategoryAPI">deleteCategoryAPI</a></li><li><a href="global.html#deleteEventAPI">deleteEventAPI</a></li><li><a href="global.html#eventCont">eventCont</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#formatCurrentDate">formatCurrentDate</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatDuration">formatDuration</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generatedRandomID">generatedRandomID</a></li><li><a href="global.html#get/">get/</a></li><li><a href="global.html#get/category/31239552/add">get/category/31239552/add</a></li><li><a href="global.html#get/category/31239552/delete">get/category/31239552/delete</a></li><li><a href="global.html#get/category/31239552/list">get/category/31239552/list</a></li><li><a href="global.html#get/category/31239552/search">get/category/31239552/search</a></li><li><a href="global.html#get/event/31239552/:id">get/event/31239552/:id</a></li><li><a href="global.html#get/sihao/add-event">get/sihao/add-event</a></li><li><a href="global.html#get/sihao/category-detail">get/sihao/category-detail</a></li><li><a href="global.html#get/sihao/delete-event">get/sihao/delete-event</a></li><li><a href="global.html#get/sihao/event-delete">get/sihao/event-delete</a></li><li><a href="global.html#get/sihao/list-all-events">get/sihao/list-all-events</a></li><li><a href="global.html#get/sihao/list-sold-out-events">get/sihao/list-sold-out-events</a></li><li><a href="global.html#listCategoriesAPI">listCategoriesAPI</a></li><li><a href="global.html#listEventsAPI">listEventsAPI</a></li><li><a href="global.html#listen">listen</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#morgan">morgan</a></li><li><a href="global.html#operationController">operationController</a></li><li><a href="global.html#post/category/31239552/add-post">post/category/31239552/add-post</a></li><li><a href="global.html#post/category/31239552/delete-post">post/category/31239552/delete-post</a></li><li><a href="global.html#post/category/31239552/search-result">post/category/31239552/search-result</a></li><li><a href="global.html#post/sihao/add-event">post/sihao/add-event</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateCategoryAPI">updateCategoryAPI</a></li><li><a href="global.html#updateEventAPI">updateEventAPI</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Sep 17 2023 18:52:27 GMT+1000 (澳大利亚东部标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

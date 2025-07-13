@@ -12,6 +12,7 @@ A simple Express.js server to manage events and sort them into categories. Built
 
 ## 📁 Project Structure
 
+```text
 event-manager/
 │
 ├── controllers/ # Request handlers (business logic)
@@ -35,7 +36,7 @@ event-manager/
 ├── server.js # Main application entry point
 ├── package.json
 └── README.md
-
+```
 
 ## 🚀 Features
 
